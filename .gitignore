@@ -21,3 +21,10 @@ build/
 
 # Firebase service account keys (CRITICAL)
 backend/*firebase-adminsdk*.json
+
+# Ignore planning and temp files
+*.txt
+*plan*
+*notes*
+*draft*
+*todo*
