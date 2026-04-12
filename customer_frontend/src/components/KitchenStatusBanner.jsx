@@ -25,13 +25,13 @@ const KitchenStatusBanner = () => {
     const { status, estimatedTime = "20–30 mins" } = statusData;
 
     let bgColor = '#20bf6b'; // low green
-    let text = '🟢 Low Busy';
+    let text = '🟢 Fast Delivery';
     if (status === 'medium') {
         bgColor = '#f7b731'; // med yellow
-        text = '🟡 Medium Busy';
+        text = '🟡 Slight Delay';
     } else if (status === 'high') {
         bgColor = '#eb3b5a'; // high red
-        text = '🔴 High Busy';
+        text = '🔴 Busy – Expect delays';
     }
 
     return (

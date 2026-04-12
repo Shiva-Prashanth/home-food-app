@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { getMenu } from '../services/api';
 import { Utensils, AlertCircle } from 'lucide-react';
 import MenuItemCard from './MenuItemCard';
-import KitchenStatusBanner from './KitchenStatusBanner';
 
-const Menu = ({ addToCart }) => {
+const Menu = ({ cart, addToCart, updateQuantity }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchMenuData = async () => {
     try {
@@ -60,14 +60,15 @@ const Menu = ({ addToCart }) => {
   // Build dynamic category list from real data
   const activeCategories = ['All', ...new Set(availableItems.map(item => item.category).filter(Boolean))];
 
-  // Filter by selected category
-  const filteredItems = selectedCategory === 'All'
-    ? availableItems
-    : availableItems.filter(item => item.category === selectedCategory);
+  // Combined filtering: Category + Search
+  const filteredItems = availableItems.filter(item => {
+    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="animate-fade-in">
-      <KitchenStatusBanner />
       {/* Page Header */}
       <div className="menu-header">
         <h2 className="page-title">Our Live Menu</h2>
@@ -82,6 +83,18 @@ const Menu = ({ addToCart }) => {
         </div>
       ) : (
         <>
+          {/* Search Bar */}
+          <div style={{ marginBottom: '1.5rem', width: '100%' }}>
+            <input
+              type="text"
+              placeholder="Search dishes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="form-control"
+              style={{ padding: '0.75rem 1rem', borderRadius: '12px', fontSize: '1rem' }}
+            />
+          </div>
+
           {/* Category Filter Pills */}
           <div className="category-filters" style={{ marginBottom: '2.5rem', justifyContent: 'flex-start' }}>
             <div className="filter-chips">
@@ -104,16 +117,20 @@ const Menu = ({ addToCart }) => {
 
           {/* Core Grid Implementation */}
           {filteredItems.length === 0 ? (
-            <div className="empty-state">
-              <h3>No items in {selectedCategory} category.</h3>
+            <div className="empty-state" style={{ padding: '3rem 1rem' }}>
+              <Utensils size={40} style={{ margin: '0 auto 1rem', display: 'block', opacity: 0.2 }} />
+              <h3>No items found for "{searchQuery}"</h3>
+              <p>Try searching something else 🍽</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid-cards">
               {filteredItems.map(item => (
                 <MenuItemCard 
                   key={item.id} 
                   item={item} 
+                  cart={cart}
                   handleAddToCart={handleAddToCart}
+                  updateQuantity={updateQuantity}
                 />
               ))}
             </div>

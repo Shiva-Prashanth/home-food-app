@@ -10,6 +10,8 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     { path: '/menu', label: '🍽 Menu' },
     { path: '/analytics', label: '📊 Insights' },
     { path: '/ingredients', label: '🧺 Kitchen Inventory' },
+    { path: '/feedback', label: '💬 Feedback' },
+    { path: '/profile', label: '👤 Profile' },
   ];
 
   const isActive = (path) => {

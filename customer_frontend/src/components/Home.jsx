@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Star, ChefHat, Utensils } from 'lucide-react';
+import { ArrowRight, Star, ChefHat, Utensils, Search, Package } from 'lucide-react';
 import { getMenu } from '../services/api';
 import KitchenStatusBanner from './KitchenStatusBanner';
 
@@ -24,20 +24,22 @@ const Home = ({ setView }) => {
   }, []);
 
   return (
-    <div className="home-container animate-fade-in">
+    <div className="home-container animate-fade-in layout-container" style={{ paddingTop: '0' }}>
       <KitchenStatusBanner />
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section" style={{ marginTop: '2.5rem' }}>
         <div className="hero-content">
           <h1 className="hero-title">Authentic Homemade Food, Delivered Fresh.</h1>
           <p className="hero-subtitle">
             Experience the rich taste of traditional cooking right at your doorstep. We prepare every meal with love, using locally sourced ingredients and time-honored recipes.
           </p>
-          <button className="btn btn-large" onClick={() => setView('menu')} style={{ marginTop: '1rem' }}>
-            Explore Our Menu <ArrowRight size={20} style={{ marginLeft: '0.5rem' }} />
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+            <button className="btn-primary" onClick={() => setView('menu')} style={{ minWidth: '200px' }}>
+              Order Now <ArrowRight size={20} style={{ marginLeft: '0.5rem' }} />
+            </button>
+          </div>
         </div>
-        <div className="hero-image-wrapper">
+        <div className="hero-image-wrapper" style={{ marginTop: '2rem' }}>
           <img
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
             alt="Delicious homemade food spread"
@@ -45,6 +47,30 @@ const Home = ({ setView }) => {
           />
         </div>
       </section>
+
+      {/* WhatsApp subtle info strip */}
+      <div style={{
+        background: '#f0fdf4', border: '1px solid #bbf7d0',
+        borderRadius: '10px', padding: '0.75rem 1.25rem',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        gap: '0.75rem', flexWrap: 'wrap', margin: '0 0 1rem 0',
+        fontSize: '0.9rem', color: '#166534'
+      }}>
+        <span>📱 Prefer WhatsApp? You can place your order directly via WhatsApp.</span>
+        <a
+          href="https://wa.me/919876543210"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            background: '#25D366', color: '#fff',
+            padding: '0.35rem 0.9rem', borderRadius: '20px',
+            fontWeight: 600, fontSize: '0.85rem',
+            textDecoration: 'none', whiteSpace: 'nowrap'
+          }}
+        >
+          Chat on WhatsApp
+        </a>
+      </div>
 
       {/* ⭐ Today's Specials Section */}
       <section style={{ padding: '3rem 2rem' }}>
@@ -126,8 +152,8 @@ const Home = ({ setView }) => {
       </section>
 
       {/* About Section */}
-      <section className="about-section">
-        <div className="about-card">
+      <section className="about-section" style={{ marginTop: '4rem' }}>
+        <div className="about-card card-elevated">
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <div className="icon-circle">
               <ChefHat size={36} color="var(--primary)" />

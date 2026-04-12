@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { 
-  getOrders, 
-  getKitchenStatus, 
-  updateKitchenStatus, 
-  getIngredients, 
-  getAnalyticsSummary, 
-  getAnalyticsStatus, 
-  getAnalyticsLowStock 
-} from '../services/api';
-import { ShoppingBag, Clock, CheckCircle, DollarSign, ArrowRight, Activity, AlertTriangle, TrendingUp, Bell } from 'lucide-react';
+import { getOrders, getKitchenStatus, updateKitchenStatus, getIngredients, getAnalyticsSummary, getAnalyticsStatus, getAnalyticsLowStock } from '../services/api';
+import { ShoppingBag, Clock, CheckCircle, DollarSign, ArrowRight, Activity, AlertTriangle, TrendingUp, Bell, Star } from 'lucide-react';
 
 export default function Dashboard({ setIsSidebarOpen }) {
   const navigate = useNavigate();
+  const [globalKitchenStatus, setGlobalKitchenStatus] = useState(localStorage.getItem('kitchenStatus') || 'open');
   const [data, setData] = useState({
     orders: [],
     kitchenStatus: 'low',
@@ -84,7 +77,14 @@ export default function Dashboard({ setIsSidebarOpen }) {
     const interval = setInterval(() => {
       fetchAllDashboardData();
     }, 10000);
-    return () => clearInterval(interval);
+
+    const handleStorageChange = () => setGlobalKitchenStatus(localStorage.getItem('kitchenStatus') || 'open');
+    window.addEventListener('kitchenStatusChanged', handleStorageChange);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('kitchenStatusChanged', handleStorageChange);
+    };
   }, []);
 
   const handleStatusUpdate = async (newStatus) => {
@@ -143,7 +143,6 @@ export default function Dashboard({ setIsSidebarOpen }) {
   const activeOrdersCount = orders.filter(o => normalizeStatus(o.status) !== 'delivered').length;
 
   const sortedOrders = [...orders].sort((a,b) => new Date(b.createdAt || b.timestamp) - new Date(a.createdAt || a.timestamp));
-  const recentOrders = sortedOrders.slice(0, 3);
 
   const getSortTime = (o, i) => {
     if (o.updatedAt) return new Date(o.updatedAt).getTime();
@@ -152,7 +151,7 @@ export default function Dashboard({ setIsSidebarOpen }) {
     return new Date().getTime() - i; 
   };
   
-  const feedOrders = [...orders].sort((a,b) => getSortTime(b, orders.indexOf(b)) - getSortTime(a, orders.indexOf(a))).slice(0, 5);
+  const feedOrders = [...orders].sort((a,b) => getSortTime(b, orders.indexOf(b)) - getSortTime(a, orders.indexOf(a))).slice(0, 4);
 
   const formatFeedStatus = (status) => {
     const s = normalizeStatus(status);
@@ -195,15 +194,36 @@ export default function Dashboard({ setIsSidebarOpen }) {
   const formatCurrency = (val) => `₹ ${(val || 0).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   const completionRate = summary.totalOrders > 0 ? Math.round((statusCounts.delivered / summary.totalOrders) * 100) : 0;
 
+  // Personalization Header Logic
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+
   return (
     <div className="max-w-[1600px] mx-auto pb-10 space-y-5">
       
+      {/* 0. GREETING SECTION */}
+      <div className="mb-4">
+        <h1 className="text-lg font-semibold text-gray-900">
+          {getGreeting()}, John 👋
+        </h1>
+        <p className="text-gray-500 text-sm">Welcome back to your kitchen dashboard</p>
+      </div>
+
       {/* 1. KITCHEN STATUS BAR */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
-          <h2 className="text-[17px] font-black text-gray-900 tracking-tight flex items-center gap-2">
-            {kitchenStatus === 'low' ? '🟢 Kitchen Open (Low)' : kitchenStatus === 'medium' ? '🟡 Kitchen Busy (Medium)' : '🔴 Kitchen Overwhelmed (High)'}
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-[17px] font-black text-gray-900 tracking-tight flex items-center gap-2">
+              Kitchen Load Status
+            </h2>
+            <span className={`px-2.5 py-0.5 rounded-lg text-xs font-bold uppercase tracking-wider ${globalKitchenStatus === 'open' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              {globalKitchenStatus === 'open' ? '🟢 Open' : '🔴 Closed'}
+            </span>
+          </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-gray-700">
             <span className="flex items-center gap-1.5"><Activity className="w-4 h-4 text-gray-400" /> {activeOrdersCount} Active Orders</span>
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-gray-400" /> Avg Prep: {avgPrepMins} mins</span>
@@ -286,9 +306,12 @@ export default function Dashboard({ setIsSidebarOpen }) {
 
         {/* Live Activity Feed */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-full">
-          <h2 className="text-[15px] font-bold text-gray-900 mb-5 tracking-tight flex items-center gap-2">
-            <Bell className="w-5 h-5 text-yellow-500" /> Live Activity
-          </h2>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-[15px] font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <Bell className="w-5 h-5 text-yellow-500" /> Live Activity
+            </h2>
+            <button onClick={() => navigate('/orders')} className="text-[11px] uppercase tracking-wider font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></button>
+          </div>
           <div className="flex-1">
             {feedOrders.length === 0 ? (
               <p className="text-[13px] font-semibold text-gray-400 py-8 text-center italic">No recent activity</p>
@@ -334,7 +357,7 @@ export default function Dashboard({ setIsSidebarOpen }) {
       </div>
 
       {/* 4. BOTTOM GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 gap-5">
 
         {/* Low Stock Alerts */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-full">
@@ -356,34 +379,6 @@ export default function Dashboard({ setIsSidebarOpen }) {
                   )
                 })}
               </ul>
-            )}
-          </div>
-        </div>
-
-        {/* Recent Orders */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-[15px] font-bold text-gray-900 tracking-tight">Recent Orders</h2>
-            <button onClick={() => navigate('/orders')} className="text-[11px] uppercase tracking-wider font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></button>
-          </div>
-          <div className="flex-1">
-            {recentOrders.length === 0 ? (
-              <p className="text-[13px] font-semibold text-gray-400 py-8 text-center italic">No orders yet</p>
-            ) : (
-              <div className="space-y-3">
-                {recentOrders.map(o => (
-                  <div key={o.id} className="p-4 bg-gray-50/50 border border-gray-100 rounded-xl flex justify-between items-center hover:bg-gray-100 transition-colors">
-                    <div>
-                      <p className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
-                        {getStatusDot(o.status)} {formatFeedStatus(o.status)} <span className="text-gray-300">•</span> <span className="text-gray-600">{o.customer?.name || o.customerName || `Order #${o.id.slice(0,5)}`}</span>
-                      </p>
-                      <p className="text-[12px] font-bold text-gray-500 mt-1.5 flex items-center gap-2">
-                        {formatCurrency(o.totalPrice)} <span className="text-gray-300">•</span> {o.items ? o.items.length : 0} items <span className="text-gray-300">•</span> {o.createdAt ? new Date(o.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : 'Now'}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             )}
           </div>
         </div>

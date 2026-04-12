@@ -342,16 +342,16 @@ async function handleChatMessage(from, messageText, sendReply) {
       `\n\n  💰 *Total: ₹${state.cart.reduce((s, e) => s + e.price * e.quantity, 0)}*\n\n` +
       `📍 Deliver to: ${state.location}\n` +
       `⏱️ Estimated delivery: *${state.estimatedTime || "30–40 minutes"}*\n\n` +
-      `Confirm your order? Reply *yes* or *no*`;
+      `All orders are prepaid. Type *PAY* to confirm your order.`;
 
     await sendReply(from, summary);
-    state.step = "ORDER_CONFIRMED";
+    state.step = "PENDING_PAYMENT";
     return;
   }
 
-  // ── STEP 7 · Confirm & save ───────────────────────────────────────────────
-  if (state.step === "ORDER_CONFIRMED") {
-    if (text === "yes") {
+  // ── STEP 7 · Confirm & Payment Gate ───────────────────────────────────────
+  if (state.step === "PENDING_PAYMENT") {
+    if (text === "pay" || text === "yes" || text === "done" || text === "1" || text === "2") {
       const orderId = generateOrderId();
       const total   = state.cart.reduce((sum, e) => sum + e.price * e.quantity, 0);
 
@@ -368,13 +368,11 @@ async function handleChatMessage(from, messageText, sendReply) {
 
       await sendReply(
         from,
-        `🎉 *Order Confirmed!* ✅\n\n` +
-        `🆔 Order ID   : *${orderId}*\n` +
-        `📍 Location  : ${state.location}\n` +
-        `💰 Total       : ₹${total}\n` +
+        `Payment received ✅\n` +
+        `Your order has been placed successfully!\n\n` +
+        `🆔 Order ID   : ${orderId}\n` +
         `⏱️ Estimated delivery: ${state.estimatedTime || "30–40 minutes"}\n\n` +
-        `Thank you for ordering with us! 🙏\n` +
-        `Send *Hi* anytime to place a new order.`
+        `Thank you for ordering with us!`
       );
       delete userStates[from];
 

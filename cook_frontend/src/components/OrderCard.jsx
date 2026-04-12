@@ -14,8 +14,7 @@ export default function OrderCard({ order, onStatusChange }) {
 
   const getNextStatus = (currentStatus) => {
     switch (currentStatus) {
-      case 'pending': return 'accepted';
-      case 'accepted': return 'preparing';
+      case 'pending': return 'preparing';
       case 'preparing': return 'ready';
       case 'ready': return 'out_for_delivery';
       case 'out_for_delivery': return 'delivered';
@@ -25,11 +24,10 @@ export default function OrderCard({ order, onStatusChange }) {
 
   const getButtonText = (currentStatus) => {
     switch (currentStatus) {
-      case 'pending': return 'Accept';
-      case 'accepted': return 'Preparing';
-      case 'preparing': return 'Ready';
+      case 'pending': return 'Accept & Prepare';
+      case 'preparing': return 'Mark Ready';
       case 'ready': return 'Out for Delivery 🚚';
-      case 'out_for_delivery': return 'Delivered';
+      case 'out_for_delivery': return 'Mark Delivered';
       default: return null;
     }
   };

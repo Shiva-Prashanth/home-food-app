@@ -5,11 +5,11 @@ const Footer = () => {
   return (
     <footer style={{ 
       background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', 
-      padding: '3rem 0 1.5rem', marginTop: 'auto' 
+      padding: '4rem 0 1.5rem', marginTop: 'auto' 
     }}>
-      <div className="container" style={{ 
+      <div className="layout-container" style={{ 
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-        gap: '2rem', marginBottom: '2rem' 
+        gap: '3rem', marginBottom: '2rem' 
       }}>
         
         {/* Brand */}
@@ -50,11 +50,15 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="container" style={{ 
+      <div className="layout-container" style={{ 
         borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', 
-        textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' 
+        textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem',
+        display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center'
       }}>
-        &copy; {new Date().getFullYear()} HomeEats. All rights reserved.
+        <div style={{ fontWeight: '500', color: 'var(--secondary)' }}>
+          100% Quality Ingredients • Hygienic Kitchen • Fast Delivery
+        </div>
+        <div>&copy; {new Date().getFullYear()} HomeEats. All rights reserved.</div>
       </div>
     </footer>
   );

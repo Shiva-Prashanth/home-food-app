@@ -21,6 +21,25 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Dark Mode ── */
+html.dark {
+  --bg-color:      #0f172a;
+  --card-bg:       #1e293b;
+  --text-main:     #f1f5f9;
+  --text-muted:    #94a3b8;
+  --secondary:     #e2e8f0;
+  --border-color:  #334155;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.4);
+  --shadow:        0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
+  --shadow-lg:     0 20px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.4);
+}
+
+html.dark body { background-color: var(--bg-color); color: var(--text-main); }
+html.dark h1, html.dark h2, html.dark h3, html.dark h4 { color: var(--secondary); }
+html.dark input, html.dark textarea, html.dark select { background-color: #1e293b; color: var(--text-main); border-color: var(--border-color); }
+html.dark .form-control { background-color: #1e293b; color: var(--text-main); border-color: var(--border-color); }
+
+
 * {
   margin: 0;
   padding: 0;
@@ -601,6 +620,9 @@ textarea.form-control {
   .page-title {
     font-size: 2rem;
   }
+  
+  .desktop-view { display: none !important; }
+  .mobile-view { display: flex !important; }
 }
 
 /* Track Order */
@@ -636,9 +658,41 @@ textarea.form-control {
 .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
 @media (max-width: 600px) { .hero-title { font-size: 2rem; } .hide-on-mobile { display: none; } }
 
-/* Tailwind Grid Class Mocks */
-.grid { display: grid; }
-.gap-6 { gap: 1.5rem; }
-.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-@media (min-width: 640px) { .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1024px) { .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* Semantic Layout Classes */
+.layout-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-column-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.grid-cards { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+@media (min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
+
+/* Reusable Components */
+.card-elevated { background: #fff; border-radius: 12px; box-shadow: var(--shadow-sm); padding: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card-elevated:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.floating-cart-btn {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background-color: var(--primary); color: #fff;
+  border-radius: 9999px; padding: 0.75rem 1.25rem;
+  box-shadow: var(--shadow-lg); border: none;
+  font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; transition: transform 0.2s, background-color 0.2s;
+  z-index: 1000;
+}
+.floating-cart-btn:hover { background-color: var(--primary-hover); transform: scale(1.05); }
+
+/* Updated Button Styles */
+.btn-primary { background-color: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); transform: translateY(-2px); }
+
+/* Track Order Entry */
+.track-short { margin-top: 2rem; display: flex; gap: 0.5rem; justify-content: center; }
+.track-short input { padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); flex-grow: 1; max-width: 300px; }
+
+/* Status Banner */
+.status-banner { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-radius: var(--radius-sm); color: #fff; font-weight: 600; margin-bottom: 2rem; box-shadow: var(--shadow-sm); }
+
+/* Navigation Links */
+.nav-link { display: flex; align-items: center; background: none; border: none; font-size: 1rem; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; padding: 0.5rem 0.25rem; }
+.nav-link:hover { color: var(--primary); }
+.nav-link.active { color: var(--primary); font-weight: 800; border-bottom: 2px solid var(--primary); }

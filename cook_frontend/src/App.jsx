@@ -7,6 +7,8 @@ import Orders from './pages/Orders';
 import Menu from './pages/Menu';
 import Ingredients from './pages/Ingredients';
 import Analytics from './pages/Analytics';
+import Profile from './pages/Profile';
+import Feedback from './pages/Feedback';
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -26,6 +28,8 @@ export default function App() {
               <Route path="/menu" element={<Menu />} />
               <Route path="/ingredients" element={<Ingredients />} />
               <Route path="/analytics" element={<Analytics />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
         </div>

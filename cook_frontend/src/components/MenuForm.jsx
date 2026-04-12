@@ -11,7 +11,6 @@ const emptyForm = {
   isAvailable: true,
   isSpecial: false,
   imageUrl: '',
-  imageUrl: '',
   ingredientsUsed: []
 };
 
@@ -77,6 +76,7 @@ export default function MenuForm({ onSubmit, editingItem, onCancelEdit }) {
     const price = parseFloat(form.price);
     if (!form.name.trim()) return setError('Item name is required.');
     if (isNaN(price) || price <= 0) return setError('Please enter a valid price.');
+    if (!form.imageUrl.trim()) return setError('Image URL is required.');
 
     // Sanitize and validate custom ingredients
     const validIngredients = form.ingredientsUsed.filter(ing => ing.ingredientId && ing.quantity);
@@ -176,7 +176,7 @@ export default function MenuForm({ onSubmit, editingItem, onCancelEdit }) {
         </div>
 
         <div className="mb-5">
-          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Image URL (Optional)</label>
+          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Image URL *</label>
           <input
             type="text"
             name="imageUrl"
@@ -185,6 +185,9 @@ export default function MenuForm({ onSubmit, editingItem, onCancelEdit }) {
             placeholder="https://example.com/image.jpg"
             className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
+          {form.imageUrl && (
+            <img src={form.imageUrl} className="w-32 h-32 mt-2 rounded object-cover" alt="Preview" />
+          )}
         </div>
 
         {/* Ingredients Section */}
