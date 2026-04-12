@@ -1,11 +1,13 @@
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export async function getOrders() {
-  const response = await fetch("http://localhost:5000/orders");
+  const response = await fetch(`${BASE_URL}/orders`);
   if (!response.ok) throw new Error("Failed to fetch orders");
   return response.json();
 }
 
 export async function updateOrderStatus(orderId, newStatus) {
-  const response = await fetch(`http://localhost:5000/order/${orderId}/status`, {
+  const response = await fetch(`${BASE_URL}/order/${orderId}/status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status: newStatus })
@@ -17,13 +19,13 @@ export async function updateOrderStatus(orderId, newStatus) {
 // --- Menu API ---
 
 export async function getMenu() {
-  const response = await fetch("http://localhost:5000/menu");
+  const response = await fetch(`${BASE_URL}/menu`);
   if (!response.ok) throw new Error("Failed to fetch menu");
   return response.json();
 }
 
 export async function addMenuItem(itemData) {
-  const response = await fetch("http://localhost:5000/menu", {
+  const response = await fetch(`${BASE_URL}/menu`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(itemData)
@@ -33,7 +35,7 @@ export async function addMenuItem(itemData) {
 }
 
 export async function updateMenuItem(itemId, updates) {
-  const response = await fetch(`http://localhost:5000/menu/${itemId}`, {
+  const response = await fetch(`${BASE_URL}/menu/${itemId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updates)
@@ -43,7 +45,7 @@ export async function updateMenuItem(itemId, updates) {
 }
 
 export async function deleteMenuItem(itemId) {
-  const response = await fetch(`http://localhost:5000/menu/${itemId}`, {
+  const response = await fetch(`${BASE_URL}/menu/${itemId}`, {
     method: 'DELETE'
   });
   if (!response.ok) throw new Error("Failed to delete menu item");
@@ -53,13 +55,13 @@ export async function deleteMenuItem(itemId) {
 // --- Kitchen Status API ---
 
 export async function getKitchenStatus() {
-  const response = await fetch("http://localhost:5000/kitchen/status");
+  const response = await fetch(`${BASE_URL}/kitchen/status`);
   if (!response.ok) throw new Error("Failed to fetch kitchen status");
   return response.json();
 }
 
 export async function updateKitchenStatus(status) {
-  const response = await fetch("http://localhost:5000/kitchen/status", {
+  const response = await fetch(`${BASE_URL}/kitchen/status`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status })
@@ -71,13 +73,13 @@ export async function updateKitchenStatus(status) {
 // --- Ingredients API ---
 
 export async function getIngredients() {
-  const response = await fetch("http://localhost:5000/ingredients");
+  const response = await fetch(`${BASE_URL}/ingredients`);
   if (!response.ok) throw new Error("Failed to fetch ingredients");
   return response.json();
 }
 
 export async function addIngredient(data) {
-  const response = await fetch("http://localhost:5000/ingredients", {
+  const response = await fetch(`${BASE_URL}/ingredients`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
@@ -87,7 +89,7 @@ export async function addIngredient(data) {
 }
 
 export async function updateIngredient(id, data) {
-  const response = await fetch(`http://localhost:5000/ingredients/${id}`, {
+  const response = await fetch(`${BASE_URL}/ingredients/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
@@ -97,7 +99,7 @@ export async function updateIngredient(id, data) {
 }
 
 export async function deleteIngredient(id) {
-  const response = await fetch(`http://localhost:5000/ingredients/${id}`, {
+  const response = await fetch(`${BASE_URL}/ingredients/${id}`, {
     method: 'DELETE'
   });
   if (!response.ok) throw new Error("Failed to delete ingredient");
@@ -105,7 +107,7 @@ export async function deleteIngredient(id) {
 }
 
 export async function getIngredientUsage() {
-  const response = await fetch("http://localhost:5000/ingredients/usage/today");
+  const response = await fetch(`${BASE_URL}/ingredients/usage/today`);
   if (!response.ok) throw new Error("Failed to fetch ingredient usage");
   return response.json();
 }
@@ -113,37 +115,37 @@ export async function getIngredientUsage() {
 // --- Analytics APIs ---
 
 export async function getAnalyticsSummary() {
-  const res = await fetch("http://localhost:5000/analytics/summary");
+  const res = await fetch(`${BASE_URL}/analytics/summary`);
   if (!res.ok) throw new Error("Failed to fetch summary");
   return res.json();
 }
 
 export async function getAnalyticsTopItems() {
-  const res = await fetch("http://localhost:5000/analytics/top-items");
+  const res = await fetch(`${BASE_URL}/analytics/top-items`);
   if (!res.ok) throw new Error("Failed to fetch top items");
   return res.json();
 }
 
 export async function getAnalyticsUsage() {
-  const res = await fetch("http://localhost:5000/analytics/ingredient-usage");
+  const res = await fetch(`${BASE_URL}/analytics/ingredient-usage`);
   if (!res.ok) throw new Error("Failed to fetch analytics usage");
   return res.json();
 }
 
 export async function getAnalyticsStatus() {
-  const res = await fetch("http://localhost:5000/analytics/order-status");
+  const res = await fetch(`${BASE_URL}/analytics/order-status`);
   if (!res.ok) throw new Error("Failed to fetch status");
   return res.json();
 }
 
 export async function getAnalyticsPeakTime() {
-  const res = await fetch("http://localhost:5000/analytics/peak-time");
+  const res = await fetch(`${BASE_URL}/analytics/peak-time`);
   if (!res.ok) throw new Error("Failed to fetch peak time");
   return res.json();
 }
 
 export async function getAnalyticsLowStock() {
-  const res = await fetch("http://localhost:5000/analytics/low-stock");
+  const res = await fetch(`${BASE_URL}/analytics/low-stock`);
   if (!res.ok) throw new Error("Failed to fetch low stock");
   return res.json();
 }

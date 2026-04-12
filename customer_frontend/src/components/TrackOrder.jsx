@@ -42,9 +42,10 @@ const TrackOrder = () => {
   // Live polling every 5 s
   useEffect(() => {
     if (!orderId) return;
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     const poll = async () => {
       try {
-        const res  = await fetch(`http://localhost:5000/orders/${orderId.trim()}`);
+        const res  = await fetch(`${API_URL}/orders/${orderId.trim()}`);
         const data = await res.json();
         if (res.ok) { setOrderDetails(data); setError(null); }
       } catch { /* silent */ }
@@ -59,8 +60,9 @@ const TrackOrder = () => {
     if (!orderId.trim()) return;
     setIsLoading(true); setError(null); setOrderDetails(null);
     localStorage.setItem('orderId', orderId.trim());
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      const res  = await fetch(`http://localhost:5000/orders/${orderId.trim()}`);
+      const res  = await fetch(`${API_URL}/orders/${orderId.trim()}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Order not found');
       setOrderDetails(data);
