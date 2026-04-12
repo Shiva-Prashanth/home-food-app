@@ -125,12 +125,13 @@ function App() {
       
       {/* Floating Cart Button */}
       {cartItemsCount > 0 && currentView !== 'checkout' && !isCartDrawerOpen && (
-        <button 
-          className="floating-cart-btn" 
+        <button
+          id="floating-cart-btn"
+          className="floating-cart-btn"
           onClick={() => setIsCartDrawerOpen(true)}
         >
-          <ShoppingCart size={24} />
-          <span>{cartItemsCount} Items</span>
+          <ShoppingCart size={22} />
+          <span>{cartItemsCount} {cartItemsCount === 1 ? 'Item' : 'Items'} · View Cart</span>
         </button>
       )}
 
@@ -143,13 +144,8 @@ function App() {
         setView={handleSetView}
       />
 
-      {/* Global Toast Notification */}
       {toastMessage && (
-        <div style={{
-          position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
-          background: '#333', color: '#fff', padding: '12px 24px', borderRadius: '8px', zIndex: 9999,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)', fontWeight: 'bold'
-        }} className="animate-fade-in">
+        <div className="toast-notification animate-fade-in">
           {toastMessage}
         </div>
       )}

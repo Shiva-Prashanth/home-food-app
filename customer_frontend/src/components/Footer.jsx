@@ -2,63 +2,75 @@ import React from 'react';
 import { UtensilsCrossed, MapPin, Phone, Mail } from 'lucide-react';
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <footer style={{ 
-      background: 'var(--card-bg)', borderTop: '1px solid var(--border-color)', 
-      padding: '4rem 0 1.5rem', marginTop: 'auto' 
-    }}>
-      <div className="layout-container" style={{ 
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-        gap: '3rem', marginBottom: '2rem' 
-      }}>
-        
+    <footer>
+      <div className="footer-inner">
         {/* Brand */}
         <div>
-          <div className="logo" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', fontSize: '1.5rem', color: 'var(--text-color)' }}>
-            <UtensilsCrossed size={28} color="var(--primary)" />
+          <div className="footer-logo">
+            <UtensilsCrossed size={24} color="var(--primary)" />
             HomeEats
           </div>
-          <p style={{ color: 'var(--text-muted)', lineHeight: '1.6' }}>
-            Delivering authentic, hygienic, and utterly delicious homemade meals right to your doorstep.
+          <p className="footer-desc">
+            Delivering authentic, hygienic, and utterly delicious homemade meals right to your doorstep. Cooked with love by passionate home chefs.
           </p>
         </div>
 
-        {/* Contact info */}
+        {/* Contact */}
         <div>
-          <h4 style={{ marginBottom: '1.2rem', color: 'var(--secondary)' }}>Contact Us</h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: 'var(--text-muted)' }}>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
-              <Phone size={18} /> +91 98765 43210
+          <h4 className="footer-heading">Contact Us</h4>
+          <ul className="footer-list">
+            <li>
+              <Phone size={16} color="var(--accent)" />
+              +91 98765 43210
             </li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
-              <Mail size={18} /> hello@homeeats.in
+            <li>
+              <Mail size={16} color="var(--accent)" />
+              hello@homeeats.in
             </li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-              <MapPin size={18} /> Serving Hyderabad & Secunderabad
+            <li>
+              <MapPin size={16} color="var(--accent)" />
+              Serving Hyderabad &amp; Secunderabad
             </li>
           </ul>
         </div>
 
-        {/* Social Links placeholder (Icons removed due to versioning) */}
+        {/* Quick Links */}
         <div>
-          <h4 style={{ marginBottom: '1.2rem', color: 'var(--secondary)' }}>Connect With Us</h4>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '500' }}>Instagram</a>
-            <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '500' }}>Twitter</a>
-            <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '500' }}>Facebook</a>
+          <h4 className="footer-heading">Quick Links</h4>
+          <ul className="footer-list" style={{ cursor: 'pointer' }}>
+            <li>🍽 Full Menu</li>
+            <li>📦 Track Order</li>
+            <li>👤 My Profile</li>
+            <li>📋 My Orders</li>
+          </ul>
+        </div>
+
+        {/* Social */}
+        <div>
+          <h4 className="footer-heading">Follow Us</h4>
+          <div className="footer-social-links">
+            <a href="#" className="footer-social-link" title="Instagram">📸 Insta</a>
+            <a href="#" className="footer-social-link" title="Twitter / X">🐦 Twitter</a>
+            <a href="#" className="footer-social-link" title="Facebook">👍 FB</a>
           </div>
+          <p style={{ color: '#5a4030', fontSize: '0.82rem', marginTop: '1rem', lineHeight: 1.6 }}>
+            Stay updated with our daily specials and new menu items by following us!
+          </p>
         </div>
       </div>
 
-      <div className="layout-container" style={{ 
-        borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', 
-        textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem',
-        display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center'
-      }}>
-        <div style={{ fontWeight: '500', color: 'var(--secondary)' }}>
-          100% Quality Ingredients • Hygienic Kitchen • Fast Delivery
+      {/* Bottom bar */}
+      <div className="footer-bottom">
+        <div className="footer-badges">
+          <span className="footer-badge">🏠 100% Homemade</span>
+          <span className="footer-badge">🌿 Fresh Ingredients</span>
+          <span className="footer-badge">🛡 Hygienic Kitchen</span>
+          <span className="footer-badge">⚡ Fast Delivery</span>
         </div>
-        <div>&copy; {new Date().getFullYear()} HomeEats. All rights reserved.</div>
+        <div>© {year} HomeEats. All rights reserved. Made with ❤️ in Hyderabad.</div>
       </div>
     </footer>
   );

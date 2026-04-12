@@ -1,59 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { getKitchenStatus } from '../services/api';
+import { Clock } from 'lucide-react';
+
+const STATUS_CONFIG = {
+  low:    { label: 'Kitchen is Live – Fast Delivery',    className: 'low',    emoji: '🟢' },
+  medium: { label: 'Slight Delay – We\'re a bit busy',   className: 'medium', emoji: '🟡' },
+  high:   { label: 'High Demand – Expect Longer Wait',   className: 'high',   emoji: '🔴' },
+};
 
 const KitchenStatusBanner = () => {
-    const [statusData, setStatusData] = useState(null);
+  const [statusData, setStatusData] = useState(null);
 
-    useEffect(() => {
-        const fetchStatus = async () => {
-            try {
-                const data = await getKitchenStatus();
-                setStatusData(data);
-            } catch (err) {
-                console.error("Failed to fetch kitchen status", err);
-                setStatusData({ status: "low", estimatedTime: "Estimated time unavailable" });
-            }
-        };
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await getKitchenStatus();
+        setStatusData(data);
+      } catch (err) {
+        console.error('Failed to fetch kitchen status', err);
+        setStatusData({ status: 'low', estimatedTime: '20–30 mins' });
+      }
+    };
 
-        fetchStatus();
-        const interval = setInterval(fetchStatus, 10000);
-        return () => clearInterval(interval);
-    }, []);
+    fetchStatus();
+    const interval = setInterval(fetchStatus, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
-    if (!statusData) return null;
-    
-    const { status, estimatedTime = "20–30 mins" } = statusData;
+  if (!statusData) return null;
 
-    let bgColor = '#20bf6b'; // low green
-    let text = '🟢 Fast Delivery';
-    if (status === 'medium') {
-        bgColor = '#f7b731'; // med yellow
-        text = '🟡 Slight Delay';
-    } else if (status === 'high') {
-        bgColor = '#eb3b5a'; // high red
-        text = '🔴 Busy – Expect delays';
-    }
+  const { status = 'low', estimatedTime = '20–30 mins' } = statusData;
+  const config = STATUS_CONFIG[status] || STATUS_CONFIG.low;
 
-    return (
-        <div style={{ 
-            padding: '0.8rem 1.5rem', 
-            background: bgColor, 
-            color: '#fff', 
-            fontWeight: 'bold', 
-            display: 'flex', 
-            flexDirection: 'column',
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: '0.25rem',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
-            <div>Kitchen Status: {text}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9em' }}>
-               <span>⏱</span> <span>Estimated Delivery Time: {estimatedTime}</span>
-            </div>
-            {status === 'high' && <div style={{ marginTop: '0.2rem', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.85em' }}>⚠️ High demand. Delivery may take longer.</div>}
-        </div>
-    );
+  return (
+    <div className={`kitchen-status-banner ${config.className}`}>
+      <div className="kitchen-status-dot" />
+      <span>{config.emoji} {config.label}</span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85em', opacity: 0.8 }}>
+        <Clock size={13} />
+        {estimatedTime}
+      </span>
+    </div>
+  );
 };
 
 export default KitchenStatusBanner;

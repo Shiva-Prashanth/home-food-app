@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Star, ChefHat, Utensils, Search, Package } from 'lucide-react';
+import { ArrowRight, Star, ChefHat, Utensils, Clock, Shield, Zap } from 'lucide-react';
 import { getMenu } from '../services/api';
 import KitchenStatusBanner from './KitchenStatusBanner';
+
+const FEATURES = [
+  { icon: '🏠', label: 'Homemade Quality' },
+  { icon: '⚡', label: 'Fast Delivery' },
+  { icon: '🌿', label: 'Fresh Ingredients' },
+  { icon: '❤️', label: 'Cooked with Love' },
+];
 
 const Home = ({ setView }) => {
   const [specials, setSpecials] = useState([]);
@@ -11,11 +18,10 @@ const Home = ({ setView }) => {
     const fetchSpecials = async () => {
       try {
         const data = await getMenu();
-        // Filter only available AND special items
         const specialItems = data.filter(item => item.isAvailable && item.isSpecial);
         setSpecials(specialItems);
       } catch (err) {
-        console.error("Failed to load specials:", err);
+        console.error('Failed to load specials:', err);
       } finally {
         setLoading(false);
       }
@@ -24,126 +30,136 @@ const Home = ({ setView }) => {
   }, []);
 
   return (
-    <div className="home-container animate-fade-in layout-container" style={{ paddingTop: '0' }}>
+    <div className="animate-fade-in" style={{ paddingTop: 0 }}>
+      {/* Kitchen Status */}
       <KitchenStatusBanner />
-      {/* Hero Section */}
-      <section className="hero-section" style={{ marginTop: '2.5rem' }}>
+
+      {/* ── Hero Section ── */}
+      <section className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Authentic Homemade Food, Delivered Fresh.</h1>
+          <h1 className="hero-title">
+            Authentic Homemade Food,<br />Delivered Fresh.
+          </h1>
           <p className="hero-subtitle">
-            Experience the rich taste of traditional cooking right at your doorstep. We prepare every meal with love, using locally sourced ingredients and time-honored recipes.
+            Experience the rich taste of traditional cooking right at your doorstep.
+            Every meal prepared with love, using locally sourced ingredients and time-honored recipes.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
-            <button className="btn-primary" onClick={() => setView('menu')} style={{ minWidth: '200px' }}>
-              Order Now <ArrowRight size={20} style={{ marginLeft: '0.5rem' }} />
+
+          {/* Feature Pills */}
+          <div className="hero-features">
+            {FEATURES.map(({ icon, label }) => (
+              <div key={label} className="feature-pill">
+                <span>{icon}</span>
+                {label}
+              </div>
+            ))}
+          </div>
+
+          <div className="hero-actions">
+            <button
+              id="hero-order-btn"
+              className="btn btn-large"
+              onClick={() => setView('menu')}
+            >
+              Order Now <ArrowRight size={20} />
+            </button>
+            <button
+              id="hero-track-btn"
+              className="btn-secondary btn-large"
+              onClick={() => setView('track')}
+            >
+              Track Order
             </button>
           </div>
         </div>
-        <div className="hero-image-wrapper" style={{ marginTop: '2rem' }}>
+
+        <div className="hero-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=85"
             alt="Delicious homemade food spread"
             className="hero-image"
+            loading="eager"
           />
         </div>
       </section>
 
-      {/* WhatsApp subtle info strip */}
-      <div style={{
-        background: '#f0fdf4', border: '1px solid #bbf7d0',
-        borderRadius: '10px', padding: '0.75rem 1.25rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        gap: '0.75rem', flexWrap: 'wrap', margin: '0 0 1rem 0',
-        fontSize: '0.9rem', color: '#166534'
-      }}>
-        <span>📱 Prefer WhatsApp? You can place your order directly via WhatsApp.</span>
+      {/* ── WhatsApp Strip ── */}
+      <div className="whatsapp-strip">
+        <span style={{ fontSize: '1.1rem' }}>📱</span>
+        <span>Prefer WhatsApp? Place your order directly via chat!</span>
         <a
           href="https://wa.me/919876543210"
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            background: '#25D366', color: '#fff',
-            padding: '0.35rem 0.9rem', borderRadius: '20px',
-            fontWeight: 600, fontSize: '0.85rem',
-            textDecoration: 'none', whiteSpace: 'nowrap'
-          }}
+          className="whatsapp-cta"
         >
           Chat on WhatsApp
         </a>
       </div>
 
-      {/* ⭐ Today's Specials Section */}
-      <section style={{ padding: '3rem 2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-          <Star size={28} fill="#feca57" color="#feca57" />
-          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-color)' }}>Today's Specials</h2>
+      {/* ── Today's Specials ── */}
+      <section className="specials-section">
+        <div className="specials-header">
+          <Star size={30} fill="#fbbf24" color="#fbbf24" />
+          <h2 className="specials-title">Today's Specials</h2>
         </div>
-        
+
         {loading ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading kitchen specials...</div>
+          <div style={{ display: 'flex', gap: '1.5rem', overflow: 'hidden' }}>
+            {[1, 2, 3].map(i => (
+              <div
+                key={i}
+                className="skeleton"
+                style={{ minWidth: 270, height: 280, borderRadius: 20, flexShrink: 0 }}
+              />
+            ))}
+          </div>
         ) : specials.length === 0 ? (
-          <div style={{ padding: '2rem', backgroundColor: '#f1f2f6', borderRadius: '12px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            No specials available at this moment. Check out our full menu!
+          <div style={{
+            padding: '2.5rem',
+            background: 'var(--bg-alt)',
+            borderRadius: 16,
+            textAlign: 'center',
+            color: 'var(--text-muted)',
+            border: '1px dashed var(--border-color)',
+          }}>
+            <Utensils size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.3 }} />
+            <p style={{ fontWeight: 500 }}>No specials right now. Check out our full menu!</p>
           </div>
         ) : (
-          <div style={{ 
-            display: 'flex', 
-            overflowX: 'auto', 
-            gap: '1.5rem', 
-            paddingBottom: '1rem',
-            msOverflowStyle: 'none',  
-            scrollbarWidth: 'none',
-            WebkitOverflowScrolling: 'touch'
-          }}>
+          <div className="specials-scroll">
             {specials.map(item => (
-              <div 
-                key={item.id} 
+              <div
+                key={item.id}
+                id={`special-card-${item.id}`}
+                className="special-card"
                 onClick={() => setView('menu')}
-                style={{
-                  minWidth: '280px',
-                  maxWidth: '300px',
-                  backgroundColor: '#fff',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  border: '1px solid #feca57',
-                  boxShadow: '0 8px 16px rgba(254, 202, 87, 0.2)',
-                  transition: 'transform 0.2s ease',
-                  flexShrink: 0
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                {/* Image Section */}
-                <div style={{ height: '160px', backgroundColor: '#f8f9fa', position: 'relative' }}>
+                <div className="special-card-img-wrap">
                   {item.imageUrl ? (
-                    <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => e.target.style.display = 'none'} />
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="special-card-img"
+                      onError={e => (e.target.style.display = 'none')}
+                    />
                   ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <Utensils size={40} color="#dfe4ea" />
+                    <div style={{
+                      width: '100%', height: '100%', display: 'flex',
+                      alignItems: 'center', justifyContent: 'center',
+                      background: 'var(--bg-color)',
+                    }}>
+                      <Utensils size={44} color="var(--border-color)" />
                     </div>
                   )}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '10px',
-                    backgroundColor: '#fff',
-                    color: '#2d3436',
-                    padding: '4px 10px',
-                    borderRadius: '8px',
-                    fontWeight: 'bold',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                  }}>
-                    ₹{item.price?.toFixed(2)}
+                  <div className="special-card-price">₹{item.price?.toFixed(2)}</div>
+                  <div className="special-badge">
+                    <Star size={9} fill="#fff" /> Special
                   </div>
                 </div>
-                
-                {/* Content Section */}
-                <div style={{ padding: '16px' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#2d3436', marginBottom: '4px' }}>{item.name}</h3>
-                  <p style={{ color: '#636e72', fontSize: '0.85rem', lineHeight: '1.4', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                    {item.description || 'Delicious special meal freshly prepared.'}
-                  </p>
+                <div className="special-card-body">
+                  <h3>{item.name}</h3>
+                  <p>{item.description || 'Freshly prepared special meal.'}</p>
                 </div>
               </div>
             ))}
@@ -151,17 +167,64 @@ const Home = ({ setView }) => {
         )}
       </section>
 
-      {/* About Section */}
-      <section className="about-section" style={{ marginTop: '4rem' }}>
-        <div className="about-card card-elevated">
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-            <div className="icon-circle">
-              <ChefHat size={36} color="var(--primary)" />
+      {/* ── Why Choose Us ── */}
+      <section style={{ padding: '2rem 0 3rem' }}>
+        <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          Why HomeEats?
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '1.25rem',
+        }}>
+          {[
+            { icon: <ChefHat size={28} color="var(--primary)" />, title: 'Expert Home Chefs', desc: 'Meals cooked by experienced home chefs with decades of culinary tradition.' },
+            { icon: <Clock size={28} color="var(--primary)" />, title: 'Fast Delivery', desc: 'Hot meals delivered within 30–45 minutes from our kitchen to your door.' },
+            { icon: <Shield size={28} color="var(--primary)" />, title: 'Hygienic & Safe', desc: 'Strict hygiene standards maintained at all stages of food preparation.' },
+            { icon: <Zap size={28} color="var(--primary)" />, title: 'Fresh Every Day', desc: 'Daily menu refreshed with seasonal locally-sourced ingredients.' },
+          ].map(({ icon, title, desc }) => (
+            <div
+              key={title}
+              style={{
+                background: 'var(--card-bg)',
+                borderRadius: 18,
+                padding: '1.75rem 1.5rem',
+                border: '1px solid var(--border-color)',
+                boxShadow: 'var(--shadow-card)',
+                transition: 'var(--transition)',
+                cursor: 'default',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-6px)';
+                e.currentTarget.style.boxShadow = 'var(--shadow)';
+                e.currentTarget.style.borderColor = 'rgba(249,115,22,0.2)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+            >
+              <div className="icon-circle" style={{ width: 56, height: 56, marginBottom: '1rem' }}>{icon}</div>
+              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem', fontWeight: 700, marginBottom: '0.4rem', color: 'var(--secondary)' }}>{title}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.6 }}>{desc}</p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── About Section ── */}
+      <section className="about-section">
+        <div className="about-card card-elevated">
+          <div className="icon-circle" style={{ margin: '0 auto 1.5rem' }}>
+            <ChefHat size={34} color="var(--primary)" />
           </div>
           <h2 className="section-title" style={{ textAlign: 'center' }}>About Our Kitchen</h2>
           <p className="about-text">
-            Welcome to HomeEats! Founded by passionate home chefs, we believe that nothing beats the warmth of a home-cooked meal. Whether you are craving a spicy Biryani, a hearty North Indian Thali, or comfort food like Paneer Curry, our mission is to deliver hygienic, premium, and utterly delicious meals straight out of our family kitchen to your dining table.
+            Welcome to <strong>HomeEats!</strong> Founded by passionate home chefs, we believe that nothing beats
+            the warmth of a home-cooked meal. Whether you're craving a spicy Biryani, a hearty North Indian Thali,
+            or comfort food like Paneer Curry — our mission is to deliver hygienic, premium, and utterly delicious
+            meals straight out of our family kitchen to your dining table.
           </p>
         </div>
       </section>

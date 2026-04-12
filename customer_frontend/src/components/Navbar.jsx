@@ -18,65 +18,120 @@ const Navbar = ({ currentView, setCurrentView, cartItemsCount }) => {
   };
 
   return (
-    <header className="navbar-container flex-between" style={{ padding: '1rem 1.5rem', background: 'var(--card-bg)', boxShadow: 'var(--shadow-sm)', position: 'sticky', top: 0, zIndex: 100 }}>
+    <header className="navbar-container flex-between" style={{ position: 'sticky', top: 0, zIndex: 200 }}>
       {/* Logo */}
-      <div className="logo" onClick={() => handleNavClick('home')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
-        <UtensilsCrossed size={28} color="var(--primary)" />
+      <div className="navbar-logo" onClick={() => handleNavClick('home')}>
+        <div className="logo-icon">
+          <UtensilsCrossed size={20} color="white" />
+        </div>
         HomeEats
       </div>
 
       {/* Desktop Nav */}
-      <nav className="desktop-view hide-on-mobile" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-        <button className={`nav-link ${currentView === 'home' ? 'active' : ''}`} onClick={() => handleNavClick('home')}>
-          <HomeIcon size={18} /><span style={{ marginLeft: '0.4rem' }}>Home</span>
+      <nav className="desktop-view hide-on-mobile" style={{ display: 'flex', gap: '0.15rem', alignItems: 'center' }}>
+        <button
+          className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
+          onClick={() => handleNavClick('home')}
+        >
+          <HomeIcon size={16} />
+          <span>Home</span>
         </button>
-        <button className={`nav-link ${currentView === 'menu' ? 'active' : ''}`} onClick={() => handleNavClick('menu')}>
-          Menu
+        <button
+          className={`nav-link ${currentView === 'menu' ? 'active' : ''}`}
+          onClick={() => handleNavClick('menu')}
+        >
+          <UtensilsCrossed size={16} />
+          <span>Menu</span>
         </button>
-        <button className={`nav-link ${currentView === 'orders' ? 'active' : ''}`} onClick={() => handleNavClick('orders')}>
-          <ClipboardList size={18} /><span style={{ marginLeft: '0.4rem' }}>My Orders</span>
+        <button
+          className={`nav-link ${currentView === 'orders' ? 'active' : ''}`}
+          onClick={() => handleNavClick('orders')}
+        >
+          <ClipboardList size={16} />
+          <span>My Orders</span>
         </button>
-        <button className={`nav-link ${currentView === 'track' ? 'active' : ''}`} onClick={() => handleNavClick('track')}>
-          <FileText size={18} /><span style={{ marginLeft: '0.4rem' }}>Track</span>
+        <button
+          className={`nav-link ${currentView === 'track' ? 'active' : ''}`}
+          onClick={() => handleNavClick('track')}
+        >
+          <FileText size={16} />
+          <span>Track</span>
         </button>
-        <button className={`nav-link ${currentView === 'profile' ? 'active' : ''}`} onClick={() => handleNavClick('profile')}>
-          <User size={20} />
+        <button
+          className={`nav-link ${currentView === 'profile' ? 'active' : ''}`}
+          onClick={() => handleNavClick('profile')}
+        >
+          <User size={17} />
         </button>
+
         {/* Dark mode toggle */}
-        <button className="nav-link" onClick={toggleTheme} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'} style={{ fontSize: '1.2rem' }}>
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        <button
+          className="nav-link"
+          onClick={toggleTheme}
+          title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {isDark ? <Sun size={17} /> : <Moon size={17} />}
         </button>
+
         {/* Cart */}
-        <button className={`nav-link ${currentView === 'cart' || currentView === 'checkout' ? 'active' : ''}`} onClick={() => handleNavClick('cart')}>
-          <div className="cart-icon-wrapper" style={{ position: 'relative' }}>
-            <ShoppingCart size={24} />
-            {cartItemsCount > 0 && <span className="cart-badge">{cartItemsCount}</span>}
+        <button
+          className={`nav-link ${currentView === 'cart' || currentView === 'checkout' ? 'active' : ''}`}
+          onClick={() => handleNavClick('cart')}
+          style={{
+            background: cartItemsCount > 0 ? 'var(--primary-light)' : undefined,
+            color: cartItemsCount > 0 ? 'var(--primary)' : undefined,
+            paddingLeft: '0.9rem',
+            paddingRight: '0.9rem',
+          }}
+        >
+          <div className="cart-icon-wrapper">
+            <ShoppingCart size={20} />
+            {cartItemsCount > 0 && (
+              <span className="cart-badge">{cartItemsCount}</span>
+            )}
           </div>
         </button>
       </nav>
 
       {/* Mobile icons */}
-      <div className="mobile-view" style={{ display: 'none', alignItems: 'center', gap: '1rem' }}>
-        <button className="nav-link" onClick={toggleTheme}>{isDark ? <Sun size={20} /> : <Moon size={20} />}</button>
-        <button className={`nav-link ${currentView === 'cart' || currentView === 'checkout' ? 'active' : ''}`} onClick={() => handleNavClick('cart')}>
-          <div className="cart-icon-wrapper" style={{ position: 'relative' }}>
-            <ShoppingCart size={24} />
+      <div className="mobile-view" style={{ display: 'none', alignItems: 'center', gap: '0.75rem' }}>
+        <button className="nav-link" onClick={toggleTheme}>
+          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+        <button
+          className={`nav-link ${currentView === 'cart' || currentView === 'checkout' ? 'active' : ''}`}
+          onClick={() => handleNavClick('cart')}
+        >
+          <div className="cart-icon-wrapper">
+            <ShoppingCart size={22} />
             {cartItemsCount > 0 && <span className="cart-badge">{cartItemsCount}</span>}
           </div>
         </button>
         <button className="nav-link" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
       {/* Mobile dropdown */}
       {isMobileMenuOpen && (
-        <div className="mobile-dropdown" style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--card-bg)', padding: '1rem', boxShadow: 'var(--shadow)', display: 'flex', flexDirection: 'column', gap: '1rem', zIndex: 99 }}>
-          <button className={`nav-link ${currentView === 'home' ? 'active' : ''}`} onClick={() => handleNavClick('home')}>Home</button>
-          <button className={`nav-link ${currentView === 'menu' ? 'active' : ''}`} onClick={() => handleNavClick('menu')}>Menu</button>
-          <button className={`nav-link ${currentView === 'orders' ? 'active' : ''}`} onClick={() => handleNavClick('orders')}>My Orders</button>
-          <button className={`nav-link ${currentView === 'track' ? 'active' : ''}`} onClick={() => handleNavClick('track')}>Track Order</button>
-          <button className={`nav-link ${currentView === 'profile' ? 'active' : ''}`} onClick={() => handleNavClick('profile')}>Profile</button>
+        <div className="mobile-dropdown">
+          {[
+            { view: 'home',   label: 'Home',      Icon: HomeIcon },
+            { view: 'menu',   label: 'Menu',       Icon: UtensilsCrossed },
+            { view: 'orders', label: 'My Orders',  Icon: ClipboardList },
+            { view: 'track',  label: 'Track Order', Icon: FileText },
+            { view: 'profile',label: 'Profile',    Icon: User },
+          ].map(({ view, label, Icon }) => (
+            <button
+              key={view}
+              className={`nav-link ${currentView === view ? 'active' : ''}`}
+              onClick={() => handleNavClick(view)}
+              style={{ justifyContent: 'flex-start', padding: '0.65rem 0.9rem' }}
+            >
+              <Icon size={17} />
+              {label}
+            </button>
+          ))}
         </div>
       )}
     </header>
